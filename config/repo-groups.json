@@ -1,0 +1,12 @@
+{
+  "groups": [
+    {
+      "name": "my-product",
+      "description": "Example group — backend API and frontend for a single product",
+      "repos": [
+        "my-org/my-backend",
+        "my-org/my-frontend"
+      ]
+    }
+  ]
+}
