@@ -1,5 +1,5 @@
 import { Octokit } from "@octokit/rest";
-import { createMessage } from "../claude/client";
+import { createMessage } from "../ai/client";
 import {
   getRepoContext,
   setRepoContext,
