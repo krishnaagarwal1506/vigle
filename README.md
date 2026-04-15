@@ -1,6 +1,6 @@
 # Vigil
 
-A self-hosted GitHub App that automatically reviews pull requests using Claude. It posts inline comments, a structured summary, and a Mermaid flow diagram on every PR — with deep awareness of your repository's architecture and, optionally, related repos in the same product group.
+A self-hosted GitHub App that automatically reviews pull requests using **Claude** or **GPT**. It posts inline comments, a structured summary, and a Mermaid flow diagram on every PR — with deep awareness of your repository's architecture and, optionally, related repos in the same product group.
 
 ---
 
@@ -97,9 +97,31 @@ Copy `.env.example` to `.env` and fill in:
 GITHUB_APP_ID=
 GITHUB_APP_PRIVATE_KEY="-----BEGIN RSA PRIVATE KEY-----\n...\n-----END RSA PRIVATE KEY-----"
 GITHUB_WEBHOOK_SECRET=
-ANTHROPIC_API_KEY=
 PORT=3000
 DB_PATH=./data/context.db
+```
+
+#### AI provider
+
+Vigil supports **Anthropic (Claude)** and **OpenAI (GPT)**. Set one API key — the provider is auto-detected:
+
+| Provider | Env var | Default model | Prompt caching |
+|---|---|---|---|
+| Anthropic | `ANTHROPIC_API_KEY` | `claude-sonnet-4-6` | Yes — stable context charged at ~10% |
+| OpenAI | `OPENAI_API_KEY` | `gpt-4o` | Automatic (prefix caching, no manual control) |
+
+```bash
+# Pick one:
+ANTHROPIC_API_KEY=sk-ant-...
+# or
+OPENAI_API_KEY=sk-...
+```
+
+To force a specific provider or model:
+
+```bash
+AI_PROVIDER=openai          # "anthropic" or "openai"
+AI_MODEL=gpt-4o-mini        # any model the provider supports
 ```
 
 ### 4. Configure repo groups (optional)
@@ -131,9 +153,9 @@ src/
   github/
     app.ts          — GitHub App initialisation, Octokit factory
     pr.ts           — PR data fetching (details, files, diff, commits)
-    orchestrator.ts — Webhook handler: coordinates indexing, Claude calls, posting
-  claude/
-    client.ts       — Anthropic SDK wrapper with prompt caching support
+    orchestrator.ts — Webhook handler: coordinates indexing, AI calls, posting
+  ai/
+    client.ts       — Provider-agnostic AI client (Anthropic + OpenAI)
     reviewer.ts     — Core review prompt and structured output parsing
     describer.ts    — PR description generation
     diagram.ts      — Mermaid diagram generation
@@ -150,5 +172,5 @@ config/
 ## Requirements
 
 - Node.js 18+
-- An Anthropic API key with access to Claude Sonnet
+- An **Anthropic API key** (Claude) or an **OpenAI API key** (GPT) — either works
 - A publicly reachable server (or a tunnel like ngrok for development) for GitHub webhook delivery

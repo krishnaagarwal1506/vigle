@@ -9,9 +9,9 @@ import {
   getLatestCommitId,
 } from "./pr";
 import { ensureRepoContext, buildGroupContext } from "../context/indexer";
-import { generatePRDescription } from "../claude/describer";
-import { reviewPR } from "../claude/reviewer";
-import { generateDiagram } from "../claude/diagram";
+import { generatePRDescription } from "../ai/describer";
+import { reviewPR } from "../ai/reviewer";
+import { generateDiagram } from "../ai/diagram";
 
 export async function handlePROpened(
   octokit: Octokit,
